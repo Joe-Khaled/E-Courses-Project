@@ -28,6 +28,8 @@ router.route('/register')
         .post(upload.single('avatar'),userController.register)        
 router.route('/login')
         .post(userController.login)        
+router.route('/profile/:id')
+        .get(userController.getUserProfile)
 
 module.exports=router;
 // const courseVal=joi.object({

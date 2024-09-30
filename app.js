@@ -18,7 +18,7 @@ mongoose.connect(url).then(()=>{
 app.use('/uploads',express.static(path.join(__dirname,'uploads')));
 app.use(cors());
 app.use(express.json());
-app.use(courseRoutes);  
+app.use('/api/courses',courseRoutes);  
 app.use('/api/users',userRoutes);
 //for non-existing routes 
 

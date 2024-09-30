@@ -1,7 +1,8 @@
-const course=require('../models/courseSchema');
+const course=require('../models/courseModel');
 const httpStatusText=require('../utils/httpStatusText');
 const asyncWrapper=require('../middleware/asyncWrapper')
 const appError=require('../utils/appError');
+const Joi = require('joi');
 const getCourses=asyncWrapper(
 async(req,res)=>{
     const query=req.query;
@@ -12,17 +13,25 @@ async(req,res)=>{
     res.status(200).json({status:httpStatusText.SUCCESS,data:{courses}});
 }
 );
+const schema=Joi.object({
+    title:Joi.string().min(3).max(15).required(),
+    description:Joi.string(),
+    price:Joi.required()
+})
 const postCourse=asyncWrapper(
-    async(req,res)=>{
+    async(req,res,next)=>{
         const newCourse=new course(req.body);
-        // const valid=courseVal(req.body);
-        // if(!valid){
-        //     res.status(400).json({Error:"Your data is invalid data"});
-        //     return;
-        // }
-        // newCourse.title=req.body.title;
-        // newCourse.description=req.body.description;
-        // newCourse.price=req.body.price;
+        const{error,value}=schema.validate(req.body);
+        if(error)
+        {
+            return next(error);
+        }
+        const oldCourse=await course.findOne({title:req.body.title});
+        if(oldCourse)
+        {
+            const error=appError.create('This course is already exist',400,httpStatusText.FAIL);
+            return next(error);
+        }
         await newCourse.save();
         res.status(200).json(newCourse);
 });

@@ -1,5 +1,5 @@
 const asyncWrapper = require("../middleware/asyncWrapper");
-const user=require('../models/user.model');
+const user=require('../models/userModel');
 const httpStatusText = require("../utils/httpStatusText");
 const appError=require('../utils/appError');
 const bcrypt=require('bcrypt');
@@ -15,6 +15,17 @@ const getAllUsers=asyncWrapper(
         res.status(200).json({status:httpStatusText.SUCCESS,Users:{allUsers}});
     }
 );
+const getUserProfile=asyncWrapper(
+    async(req,res,next)=>{
+           const findUser=await user.findOne({id:req.body.id}) 
+           if(!findUser)
+           {
+                const error=appError.create('This profile is not exist',400,httpStatusText.FAIL);
+                return next(error);
+           }
+           res.status(200).json({status:httpStatusText.SUCCESS,Profile:{findUser}});
+    }
+)
 const register=asyncWrapper(
     async(req,res,next)=>{
         // console.log(req.body);
@@ -65,6 +76,7 @@ const login=asyncWrapper(
 )
 module.exports={
     getAllUsers,
+    getUserProfile,
     register,
     login
 }

@@ -7,6 +7,9 @@ const userRoles = require('../utils/userRoles');
 router.route('/')
         .get(controllers.getCourses);
         
+router.route('/title')
+      .get(controllers.getCourseByTitle);
+
 router.route('/add')
       .post(verifyToken,allowedTo(userRoles.MANAGER),controllers.postCourse);
 

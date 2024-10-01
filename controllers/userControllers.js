@@ -17,7 +17,7 @@ const getAllUsers=asyncWrapper(
 );
 const getUserProfile=asyncWrapper(
     async(req,res,next)=>{
-           const findUser=await user.findOne({id:req.body.id}) 
+           const findUser=await user.findById(req.params.id); 
            if(!findUser)
            {
                 const error=appError.create('This profile is not exist',400,httpStatusText.FAIL);

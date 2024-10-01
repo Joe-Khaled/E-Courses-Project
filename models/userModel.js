@@ -28,7 +28,7 @@ const userSchema=new Schema({
     },
     avatar:{
         type:String,
-        default:'uploads/profile.jpg',
+        default:'uploads/avatar1.jpg',
     }
 })
 const userModel=mongoose.model('User',userSchema);

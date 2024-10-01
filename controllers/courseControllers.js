@@ -14,7 +14,7 @@ async(req,res)=>{
 }
 );
 const schema=Joi.object({
-    title:Joi.string().min(3).max(30).required(),
+    title:Joi.string().min(3).max(25).required(),
     description:Joi.string(),
     price:Joi.required()
 })
@@ -37,7 +37,7 @@ const postCourse=asyncWrapper(
 });
 const getCourse=asyncWrapper(
 async(req,res,next)=>{
-        const myCourse=await course.findById(req.params.CourseId);
+        const myCourse=await course.findById(req.params.id);
         if(!myCourse)
         {
             const error=appError.create("Not found a course",404,httpStatusText.FAIL);
@@ -52,13 +52,26 @@ const updateCourse=asyncWrapper(async(req,res)=>{
 const deleteCourse=asyncWrapper(
     async(req,res)=>{
         // console.log(req.currentUser);
-        const recentCourse=await course.findByIdAndDelete(req.params.courseId);
+        await course.findByIdAndDelete(req.params.id);
         res.status(200).json({status:httpStatusText.SUCCESS,data:null});
 });
+const getCourseByTitle=asyncWrapper(
+    async(req,res)=>{
+        const query=req.query;
+        const myCourse=await course.findOne({title:query.title});
+        if(!myCourse)
+        {
+            const error=appError.create("This course is not available now",404,httpStatusText.FAIL);
+            res.json(error);
+        }
+        res.status(200).json({status:httpStatusText.SUCCESS,data:{myCourse}});
+    }
+);
 module.exports = {
     getCourses,
-    postCourse,
     getCourse,
+    getCourseByTitle,
+    postCourse,
     updateCourse,
     deleteCourse
 };

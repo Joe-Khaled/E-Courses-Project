@@ -14,7 +14,7 @@ router.route('/:id')
       .get(controllers.getCourse);
 
 router.route('/update/:id')
-      .put(verifyToken,allowedTo(userRoles.ADMIN,userRoles.MANAGER),controllers.updateCourse);
+      .patch(verifyToken,allowedTo(userRoles.ADMIN,userRoles.MANAGER),controllers.updateCourse);
 
 router.route('/delete/:id')
       .delete(verifyToken,allowedTo(userRoles.ADMIN,userRoles.MANAGER),controllers.deleteCourse);

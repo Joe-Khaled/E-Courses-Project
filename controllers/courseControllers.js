@@ -14,7 +14,7 @@ async(req,res)=>{
 }
 );
 const schema=Joi.object({
-    title:Joi.string().min(3).max(15).required(),
+    title:Joi.string().min(3).max(30).required(),
     description:Joi.string(),
     price:Joi.required()
 })
@@ -46,7 +46,7 @@ async(req,res,next)=>{
         res.status(200).json({status:httpStatusText.SUCCESS,data:{myCourse}});
 });
 const updateCourse=asyncWrapper(async(req,res)=>{
-        const recentCourse=await course.findByIdAndUpdate(req.params.courseId,req.body);
+        const recentCourse=await course.findByIdAndUpdate(req.params.id,req.body);
         res.status(200).json({status:httpStatusText.SUCCESS,data:{recentCourse}});
 });
 const deleteCourse=asyncWrapper(
